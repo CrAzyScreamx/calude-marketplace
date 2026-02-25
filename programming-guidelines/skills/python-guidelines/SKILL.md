@@ -1,5 +1,5 @@
 ---
-name: programming-guidelines
+name: python-guidelines
 description: "ALWAYS invoke this skill BEFORE writing any Python code. Do not write or edit Python files without invoking this skill first."
 ---
 
