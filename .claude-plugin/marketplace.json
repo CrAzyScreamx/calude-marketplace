@@ -5,8 +5,8 @@
     },
     "plugins": [
         {
-            "name": "programming-plugin",
-            "source": "./programming-plugin",
+            "name": "programming-guidelines",
+            "source": "./programming-guidelines",
             "description": "Adds programming guidelines and best practices to the system"
         }
     ]
