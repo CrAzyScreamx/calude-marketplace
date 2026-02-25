@@ -1,6 +1,6 @@
 ---
 name: programming-guidelines
-description: "When asked to work on a Python project, follow these guidelines to ensure that the code is clean, maintainable, and follows best practices."
+description: "ALWAYS invoke this skill BEFORE writing any Python code. Do not write or edit Python files without invoking this skill first."
 ---
 
 # Important
@@ -59,7 +59,7 @@ This file is a set of specific guidelines to follow when writing code.
 
 
 ## Testing
-- After you finish a specific task or specific feature, use TaskCall to call agent `code-tester` that specializes in testing the code using pytest. Provide the agent with the feature or task you just finished.
+- After you finish a specific task or specific feature, use the `Task` tool with `subagent_type: "programming-guidelines:pytest-edge-case-writer"` to write comprehensive edge case tests. Provide the agent with the feature or task you just finished, the file path, and the venv location. This step is mandatory — do not skip it.
 
 ## Additional Resources
 - [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/)
