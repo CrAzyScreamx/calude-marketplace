@@ -1,0 +1,13 @@
+{
+    "name": "my-guidelines",
+    "owner": {
+        "name": "Amit Yanay"
+    },
+    "plugins": [
+        {
+            "name": "programming-plugin",
+            "source": "./plugins/programming-plugin",
+            "description": "Adds programming guidelines and best practices to the system"
+        }
+    ]
+}
