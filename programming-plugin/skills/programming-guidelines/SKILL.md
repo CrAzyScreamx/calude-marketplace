@@ -1,6 +1,6 @@
 ---
 name: programming-guidelines
-description: "When asked to write code, follow these guidelines to ensure the code is clean, efficient, and maintainable. This should be used in python only."
+description: "When asked to work on a Python project, follow these guidelines to ensure that the code is clean, maintainable, and follows best practices."
 ---
 
 # Important
