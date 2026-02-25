@@ -1,5 +1,5 @@
 {
-    "name": "programming-plugin",
+    "name": "programming-guidelines",
     "description": "Adds programming guidelines and best practices to the system",
-    "version": "1.0.2"
+    "version": "1.0.3"
 }
