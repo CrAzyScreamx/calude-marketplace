@@ -57,10 +57,6 @@ This file is a set of specific guidelines to follow when writing code.
 - The configuration variables should be in upper case and descriptive of their purpose, and should be documented in the config.py file.
 - Don't put configuration variables in sepearate folder unless you you absolutely need to.
 
-
-## Testing
-- After you finish a specific task or specific feature, use the `Task` tool with `subagent_type: "programming-guidelines:pytest-edge-case-writer"` to write comprehensive edge case tests. Provide the agent with the feature or task you just finished, the file path, and the venv location. This step is mandatory — do not skip it.
-
 ## Additional Resources
 - [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/)
 - [Python's official documentation](https://docs.python.org/3/)
