@@ -6,7 +6,7 @@
     "plugins": [
         {
             "name": "programming-plugin",
-            "source": "./plugins/programming-plugin",
+            "source": "./programming-plugin",
             "description": "Adds programming guidelines and best practices to the system"
         }
     ]
