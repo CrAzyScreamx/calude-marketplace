@@ -1,0 +1,5 @@
+{
+    "name": "session-starter",
+    "description": "Adds a command that will run basic pre-requisites in a project folder so the same AI can continue working",
+    "version": "1.0.0"
+}
