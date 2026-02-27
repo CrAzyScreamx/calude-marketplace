@@ -53,9 +53,8 @@ This file is a set of specific guidelines to follow when writing code.
 - Use meaningful variable names and avoid using single-letter variable names, except for loop counters or when the meaning is clear from the context.
 
 ## Configuration Variables
-- If there are configuration variables that are used all accross the project, they should be under config.py file that loads the configuation variables from environment variables, and provide default values if the environment variables are not set. This way, the configuration is centralized and can be easily managed.
-- The configuration variables should be in upper case and descriptive of their purpose, and should be documented in the config.py file.
-- Don't put configuration variables in sepearate folder unless you you absolutely need to.
+- Any configuration variables related to the project should be stored under one file called config.py, this file is managing all variables so we can change everything from one place
+- The config.py file should load the .env present in the same folder where it'll pull needed settings for the project.
 
 ## Additional Resources
 - [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/)
