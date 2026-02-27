@@ -1,6 +1,6 @@
 ---
-name: start-session
-description: Adds a command that run basic pre-requisites in a project folder so you can continue where the previous session ended
+name: session-manager
+description: Adds commands to manage a session in the project, /start-session to start a session and /summarize-session to summarize the session and update the summary.md file.
 ---
 
 # Trigger condition

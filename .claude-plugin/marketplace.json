@@ -8,6 +8,11 @@
             "name": "programming-guidelines",
             "source": "./programming-guidelines",
             "description": "Adds programming guidelines and best practices to the system"
+        },
+        {
+            "name": "session-manager",
+            "source": "./session-manager",
+            "description": "Adds commands to manage a session in the project, /start-session to start a session and /summarize-session to summarize the session and update the summary.md file."
         }
     ]
 }
