@@ -13,6 +13,11 @@
             "name": "session-manager",
             "source": "./session-manager",
             "description": "Adds commands to manage a session in the project, /start-session to start a session and /summarize-session to summarize the session and update the summary.md file."
+        },
+        {
+            "name": "image-generator",
+            "source": "./image-generator",
+            "description": "Generates images via OpenRouter using Vertex AI models. Triggers on /generate-image or automatically when an image is needed."
         }
     ]
 }
