@@ -53,19 +53,16 @@ if (!apiKey) {
 }
 
 // ---------------------------------------------------------------------------
-// Route to endpoint based on model
-// imagen / flux / dall-e → images/generations (image-only models)
-// gemini / everything else → chat/completions (multimodal)
+// OpenRouter uses /api/v1/chat/completions for ALL models (text and image).
+// There is no separate /images/generations endpoint on OpenRouter.
 // ---------------------------------------------------------------------------
-const IMAGE_ONLY_PATTERNS = ['imagen', 'flux', 'dall-e', 'stable-diffusion', 'midjourney'];
-const isImageOnly = IMAGE_ONLY_PATTERNS.some(p => model.toLowerCase().includes(p));
-
 const OPENROUTER_HOST = 'openrouter.ai';
-const endpoint = isImageOnly ? '/api/v1/images/generations' : '/api/v1/chat/completions';
+const ENDPOINT = '/api/v1/chat/completions';
 
-const requestBody = isImageOnly
-  ? JSON.stringify({ model, prompt, response_format: { type: 'b64_json' } })
-  : JSON.stringify({ model, messages: [{ role: 'user', content: prompt }] });
+const requestBody = JSON.stringify({
+  model,
+  messages: [{ role: 'user', content: prompt }],
+});
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -99,6 +96,10 @@ function downloadUrl(url) {
   return new Promise((resolve, reject) => {
     const mod = url.startsWith('https') ? https : http;
     mod.get(url, (res) => {
+      // Follow redirects
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        return downloadUrl(res.headers.location).then(resolve).catch(reject);
+      }
       const chunks = [];
       res.on('data', chunk => chunks.push(chunk));
       res.on('end', () => resolve(Buffer.concat(chunks)));
@@ -107,9 +108,46 @@ function downloadUrl(url) {
   });
 }
 
-function extractBase64FromDataUri(dataUri) {
-  const match = dataUri.match(/^data:image\/[^;]+;base64,(.+)$/s);
-  return match ? match[1] : null;
+function base64ToBuffer(b64) {
+  // Strip data URI prefix if present
+  const match = b64.match(/^data:image\/[^;]+;base64,(.+)$/s);
+  return Buffer.from(match ? match[1] : b64, 'base64');
+}
+
+// ---------------------------------------------------------------------------
+// Extract image from a chat/completions response
+//
+// OpenRouter image models return the image in one of several ways:
+//   1. content is an array → look for { type: "image_url", image_url: { url: "data:..." } }
+//   2. content is a string containing a data URI
+//   3. content is a string containing a plain URL to the image
+// ---------------------------------------------------------------------------
+async function extractImage(response) {
+  const content = response?.choices?.[0]?.message?.content;
+
+  if (Array.isArray(content)) {
+    for (const part of content) {
+      if (part.type === 'image_url') {
+        const url = part.image_url?.url ?? part.image_url;
+        if (!url) continue;
+        if (url.startsWith('data:')) return base64ToBuffer(url);
+        return await downloadUrl(url);
+      }
+    }
+  }
+
+  if (typeof content === 'string') {
+    // Inline data URI
+    if (/^data:image\//i.test(content)) return base64ToBuffer(content);
+    const dataUriMatch = content.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/);
+    if (dataUriMatch) return base64ToBuffer(dataUriMatch[0]);
+
+    // Plain URL (starts with http/https)
+    const urlMatch = content.match(/https?:\/\/\S+\.(png|jpg|jpeg|webp|gif)/i);
+    if (urlMatch) return await downloadUrl(urlMatch[0]);
+  }
+
+  return null;
 }
 
 // ---------------------------------------------------------------------------
@@ -118,11 +156,11 @@ function extractBase64FromDataUri(dataUri) {
 async function main() {
   console.error(`Model:  ${model}`);
   console.error(`Prompt: ${prompt}`);
-  console.error(`Calling OpenRouter (${endpoint})...`);
+  console.error('Calling OpenRouter...');
 
   const { status, body: response } = await httpsPost(
     OPENROUTER_HOST,
-    endpoint,
+    ENDPOINT,
     {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -133,68 +171,28 @@ async function main() {
   );
 
   if (status !== 200) {
-    const msg = response?.error?.message || JSON.stringify(response, null, 2);
+    const msg =
+      typeof response === 'object'
+        ? response?.error?.message ?? JSON.stringify(response, null, 2)
+        : String(response).slice(0, 500);
     console.error(`OpenRouter API error (HTTP ${status}):\n${msg}`);
     process.exit(1);
   }
 
-  // ---- Extract image buffer ------------------------------------------------
-  let imageBuffer = null;
-
-  if (isImageOnly) {
-    // images/generations: data[0].b64_json or data[0].url
-    const item = response?.data?.[0];
-    if (item?.b64_json) {
-      imageBuffer = Buffer.from(item.b64_json, 'base64');
-    } else if (item?.url) {
-      imageBuffer = await downloadUrl(item.url);
-    }
-  } else {
-    // chat/completions: image may be in content parts or data array
-    const choice = response?.choices?.[0];
-    const content = choice?.message?.content;
-
-    if (Array.isArray(content)) {
-      // Multimodal content array
-      for (const part of content) {
-        if (part.type === 'image_url') {
-          const url = part.image_url?.url ?? part.image_url;
-          if (url?.startsWith('data:')) {
-            const b64 = extractBase64FromDataUri(url);
-            if (b64) imageBuffer = Buffer.from(b64, 'base64');
-          } else if (url) {
-            imageBuffer = await downloadUrl(url);
-          }
-          if (imageBuffer) break;
-        }
-      }
-    } else if (typeof content === 'string') {
-      // Inline data URI in text
-      const b64 = extractBase64FromDataUri(content);
-      if (b64) imageBuffer = Buffer.from(b64, 'base64');
-    }
-
-    // Fallback: some models put the image in response.data
-    if (!imageBuffer && response?.data?.[0]?.b64_json) {
-      imageBuffer = Buffer.from(response.data[0].b64_json, 'base64');
-    }
-  }
+  const imageBuffer = await extractImage(response);
 
   if (!imageBuffer) {
     console.error('No image data found in response.');
-    console.error('Full response:', JSON.stringify(response, null, 2));
+    console.error('Response content:', JSON.stringify(response?.choices?.[0]?.message?.content, null, 2));
     process.exit(1);
   }
 
-  // ---- Save file -----------------------------------------------------------
+  // Save file
   const timestamp = Date.now();
-  const filename = `generated-image-${timestamp}.png`;
-  const outputPath = path.join(outputDir, filename);
-
+  const outputPath = path.join(outputDir, `generated-image-${timestamp}.png`);
   fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outputPath, imageBuffer);
 
-  // Print the path so the caller (Claude) can report it
   console.log(`Image saved: ${outputPath}`);
 }
 

@@ -47,8 +47,10 @@ Report to the user:
 
 ## Model Reference
 
-| Model | Type | Notes |
-|-------|------|-------|
-| `google/gemini-3.1-flash-image-preview` | Multimodal | Default — best quality |
-| `google/imagen-4.0-generate-001` | Image-only | High-fidelity photorealism |
-| `black-forest-labs/flux-kontext-pro` | Image-only | Fast, artistic styles |
+All models use OpenRouter's `/api/v1/chat/completions` endpoint — no special routing needed.
+
+| Model | Notes |
+|-------|-------|
+| `google/gemini-3.1-flash-image-preview` | Default — best quality |
+| `google/imagen-4.0-generate-001` | High-fidelity photorealism |
+| `black-forest-labs/flux-kontext-pro` | Fast, artistic styles |
