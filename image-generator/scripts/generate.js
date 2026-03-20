@@ -14,13 +14,13 @@ const args = process.argv.slice(2);
 if (args.length === 0 || args[0] === '--help') {
   console.error('Usage: node generate.js "<prompt>" [--model <model-id>] [--output-dir <dir>]');
   console.error('');
-  console.error('Default model: google/gemini-3.1-flash-image-preview');
+  console.error('Default model:black-forest-labs/flux.2-pro');
   console.error('Requires: OPENROUTER_API_KEY environment variable');
   process.exit(1);
 }
 
 let prompt = '';
-let model = 'google/gemini-3.1-flash-image-preview';
+let model = 'black-forest-labs/flux.2-pro';
 let outputDir = process.cwd();
 
 for (let i = 0; i < args.length; i++) {

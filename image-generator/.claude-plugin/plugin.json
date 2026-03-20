@@ -1,5 +1,5 @@
 {
     "name": "image-generator",
     "description": "Generates images via OpenRouter using Vertex AI models. Triggers on /generate-image [prompt] [--model model-id] or automatically when an image is needed.",
-    "version": "1.0.0"
+    "version": "1.0.1"
 }
