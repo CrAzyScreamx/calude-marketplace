@@ -62,6 +62,7 @@ const ENDPOINT = '/api/v1/chat/completions';
 const requestBody = JSON.stringify({
   model,
   messages: [{ role: 'user', content: prompt }],
+  modalities: ['image'],
 });
 
 // ---------------------------------------------------------------------------
@@ -117,14 +118,27 @@ function base64ToBuffer(b64) {
 // ---------------------------------------------------------------------------
 // Extract image from a chat/completions response
 //
-// OpenRouter image models return the image in one of several ways:
-//   1. content is an array → look for { type: "image_url", image_url: { url: "data:..." } }
-//   2. content is a string containing a data URI
-//   3. content is a string containing a plain URL to the image
+// When modalities: ['image'] is set, OpenRouter returns images in:
+//   message.images = [{ image_url: { url: "data:image/...;base64,..." } }, ...]
+//
+// Fallback: some models put the image in message.content as an array of parts
+// or as a plain data URI string.
 // ---------------------------------------------------------------------------
 async function extractImage(response) {
-  const content = response?.choices?.[0]?.message?.content;
+  const message = response?.choices?.[0]?.message;
+  if (!message) return null;
 
+  // Primary: message.images (returned when modalities: ['image'] is requested)
+  if (Array.isArray(message.images) && message.images.length > 0) {
+    const url = message.images[0]?.image_url?.url;
+    if (url) {
+      if (url.startsWith('data:')) return base64ToBuffer(url);
+      return await downloadUrl(url);
+    }
+  }
+
+  // Fallback: content parts array
+  const content = message.content;
   if (Array.isArray(content)) {
     for (const part of content) {
       if (part.type === 'image_url') {
@@ -136,13 +150,11 @@ async function extractImage(response) {
     }
   }
 
+  // Fallback: data URI embedded in a string
   if (typeof content === 'string') {
-    // Inline data URI
     if (/^data:image\//i.test(content)) return base64ToBuffer(content);
-    const dataUriMatch = content.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/);
-    if (dataUriMatch) return base64ToBuffer(dataUriMatch[0]);
-
-    // Plain URL (starts with http/https)
+    const match = content.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/);
+    if (match) return base64ToBuffer(match[0]);
     const urlMatch = content.match(/https?:\/\/\S+\.(png|jpg|jpeg|webp|gif)/i);
     if (urlMatch) return await downloadUrl(urlMatch[0]);
   }
@@ -182,8 +194,10 @@ async function main() {
   const imageBuffer = await extractImage(response);
 
   if (!imageBuffer) {
+    const msg = response?.choices?.[0]?.message;
     console.error('No image data found in response.');
-    console.error('Response content:', JSON.stringify(response?.choices?.[0]?.message?.content, null, 2));
+    console.error('message.images:', JSON.stringify(msg?.images, null, 2));
+    console.error('message.content:', JSON.stringify(msg?.content, null, 2));
     process.exit(1);
   }
 
