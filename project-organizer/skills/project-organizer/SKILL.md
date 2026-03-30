@@ -209,11 +209,32 @@ Then add the vault reference to `CLAUDE.md` as described in Scenario 1, step 3c.
 
 When starting any task on a project that has a vault:
 
-1. Read `tools.md` first for orientation.
-2. Identify which feature(s) are relevant to the task — use the feature names and keywords.
-3. Read those feature files to understand the files involved before opening source code.
+1. **Read `tools.md` first** for a quick orientation on the project's language, dependencies, and purpose.
+2. **Generate search keywords from the user's request.** Before opening any feature file, extract 3–6 terms that describe what the user is asking about. Think in domain terms, not just file names — e.g. "user authentication", "JWT", "login flow" rather than "auth.ts". Include synonyms if the phrasing is ambiguous.
+3. **Search the vault's `keywords` frontmatter** for matches. Grep the vault directory for your keywords against the `keywords:` field in each feature file's frontmatter. The file(s) whose keywords overlap most with your search terms are the right starting point.
+4. **Read the matched feature file(s)** to understand the files involved, dependencies, and structure before touching source code.
 
-This is much faster than grepping or browsing source files cold. The vault is the map; source files are the territory.
+This keyword-first approach is much faster than browsing source files cold. The vault is the map; source files are the territory.
+
+### CLAUDE.md keyword search instruction
+
+When writing the `## Project Vault` section into `CLAUDE.md` (Scenarios 1 and 3), use this exact template:
+
+```
+## Project Vault
+
+Before looking for project context in source files, check the vault at `./<VaultName>/`.
+
+**How to navigate the vault:**
+1. Read `tools.md` for a project overview.
+2. Extract 3–6 keywords from the user's request (use domain terms, not just file names).
+3. Search the vault for those keywords in the `keywords:` frontmatter field:
+   grep -r "keywords:" ./<VaultName>/ --include="*.md" -l
+   Then read the frontmatter of candidates to find the best match.
+4. Read the matched feature file before opening source code.
+
+The vault is the fast path — use it before digging into source.
+```
 
 ---
 
