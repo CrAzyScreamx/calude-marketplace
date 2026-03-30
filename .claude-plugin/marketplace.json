@@ -18,6 +18,11 @@
             "name": "image-generator",
             "source": "./image-generator",
             "description": "Generates images via OpenRouter using Vertex AI models. Triggers on /generate-image or automatically when an image is needed."
+        },
+        {
+            "name": "project-organizer",
+            "source": "./project-organizer",
+            "description": "Initializes and maintains an Obsidian vault inside the project directory that serves as a living knowledge base of the project's structure, features, tools, and dependencies."
         }
     ]
 }

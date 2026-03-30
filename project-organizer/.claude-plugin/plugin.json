@@ -1,0 +1,14 @@
+{
+    "name": "project-organizer",
+    "description": "Initializes and maintains an Obsidian vault inside the project directory that serves as a living knowledge base of the project's structure, features, tools, and dependencies. Designed to work alongside the obsidian skill (recommended, not required).",
+    "version": "1.0.0",
+    "dependencies": {
+        "recommended": [
+            {
+                "marketplace": "https://github.com/kepano/obsidian-skills",
+                "plugin": "obsidian",
+                "reason": "Provides Obsidian Markdown, CLI, and Canvas support for reading and writing vault files correctly."
+            }
+        ]
+    }
+}
