@@ -23,6 +23,11 @@
             "name": "project-organizer",
             "source": "./project-organizer",
             "description": "Initializes and maintains an Obsidian vault inside the project directory that serves as a living knowledge base of the project's structure, features, tools, and dependencies."
+        },
+        {
+            "name": "oogabooga",
+            "source": "./oogabooga",
+            "description": "A fun plugin that adds a command /oogabooga to make the AI start talking like a caveman. Useful to reduce Token usage"
         }
     ]
 }
