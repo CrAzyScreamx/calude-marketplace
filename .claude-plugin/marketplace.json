@@ -28,6 +28,16 @@
             "name": "oogabooga",
             "source": "./oogabooga",
             "description": "A fun plugin that adds a command /oogabooga to make the AI start talking like a caveman. Useful to reduce Token usage"
+        },
+        {
+            "name": "project-planning",
+            "source": "./project-planning",
+            "description": "Reads a project's plan.md and builds/updates a tasks.md split into Milestones and sub-tasks with descriptions and a status tracking table. Auto-triggers at project/session start so the planning convention never needs re-explaining."
+        },
+        {
+            "name": "environmental-preparations",
+            "source": "./environmental-preparations",
+            "description": "A running log of the user's environment preferences and configuration changes (CLAUDE.md rules, settings, conventions). Read at session start to set up the environment the way the user likes."
         }
     ]
 }
