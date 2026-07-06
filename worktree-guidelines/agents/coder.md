@@ -13,7 +13,9 @@ Before writing ANY code you MUST load guidelines:
 1. Detect the language(s) you're about to write.
 2. Load the matching `<lang>-guidelines` skill (e.g. `python-guidelines`).
 3. If none exists for that language, invoke the `best-practices` builder skill to
-   create one, then load it. Do not skip this.
+   create one, then load it. Do not skip this. A just-built plugin is not yet an
+   installed skill this session — load it by reading its `SKILL.md` at the path
+   `best-practices` reports.
 
 Follow the loaded guidelines. Baseline architecture rules:
 - Files ≤ ~500 lines.
