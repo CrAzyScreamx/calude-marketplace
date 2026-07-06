@@ -5,9 +5,9 @@
     },
     "plugins": [
         {
-            "name": "programming-guidelines",
-            "source": "./programming-guidelines",
-            "description": "Adds programming guidelines and best practices to the system"
+            "name": "worktree-guidelines",
+            "source": "./worktree-guidelines",
+            "description": "Enforces a review-gated worktree workflow: entry steers you to load/build a per-language guidelines skill and code via the coder agent; a reviewer runs code-review and writes a pass marker; exit and merge-into-main are blocked until the reviewed HEAD is merged and the tree is clean."
         },
         {
             "name": "session-manager",

@@ -1,0 +1,5 @@
+{
+    "name": "worktree-guidelines",
+    "description": "Enforces a review-gated worktree workflow. You MUST use this when working in a git worktree: on entry it steers you to load or build a per-language guidelines skill and code through the coder agent; a reviewer agent runs code-review and writes a pass marker; exit and merge-into-main are BLOCKED until the reviewed HEAD is merged and the tree is clean. Use for any isolated feature work in a worktree.",
+    "version": "1.0.0"
+}
