@@ -1,11 +1,17 @@
 #!/usr/bin/env node
-// Scaffold a <name>-guidelines plugin into a marketplace and register it.
+// Scaffold a guidelines plugin into a marketplace and register it.
 // This is the ONLY approved way to emit a guidelines plugin — never hand-write
 // the files, and never drop a bare SKILL.md into a skills dir.
 //
+// Plugin name and skill name are SEPARATE:
+//   --plugin is the plugin folder + plugin.json + marketplace entry name.
+//   --skill  is the skill name (must end in "-guidelines" — the coder/hooks
+//            resolve the guideline by that suffix). It names skills/<skill>/.
+//
 // Usage:
-//   node scaffold.mjs --name react-guidelines --dest <marketplace-root> \
-//     --description "<invoke-before-writing description>" --skill <path-to-SKILL.md-body>
+//   node scaffold.mjs --plugin react-frontend --skill react-guidelines \
+//     --dest <marketplace-root> --description "<invoke-before-writing description>" \
+//     --body <path-to-SKILL.md-body>
 //   Optional (only when <dest> has no marketplace.json yet):
 //     --market-name <name> --owner <owner>
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
@@ -21,18 +27,19 @@ function parseArgs(argv) {
 }
 
 const a = parseArgs(process.argv.slice(2));
-const missing = ['name', 'dest', 'description', 'skill'].filter((k) => !a[k]);
+const missing = ['plugin', 'skill', 'dest', 'description', 'body'].filter((k) => !a[k]);
 if (missing.length) {
   console.error(`Missing required flag(s): ${missing.map((m) => '--' + m).join(', ')}`);
+  console.error('  --plugin is the plugin name; --skill is the skill name (must end in -guidelines).');
   console.error('  --dest is the marketplace root the user pointed you at (ask them first).');
   process.exit(1);
 }
-if (!/-guidelines$/.test(a.name)) {
-  console.error(`--name must end with "-guidelines" (got "${a.name}").`);
+if (!/-guidelines$/.test(a.skill)) {
+  console.error(`--skill must end with "-guidelines" (got "${a.skill}").`);
   process.exit(1);
 }
-if (!existsSync(a.skill)) {
-  console.error(`--skill file not found: ${a.skill}`);
+if (!existsSync(a.body)) {
+  console.error(`--body file not found: ${a.body}`);
   process.exit(1);
 }
 
@@ -49,25 +56,25 @@ if (existsSync(marketFile)) {
 }
 market.plugins ??= [];
 
-if (market.plugins.some((p) => p.name === a.name)) {
-  console.error(`Plugin "${a.name}" already exists in ${marketFile}. Stop and ask the user: overwrite or rename?`);
+if (market.plugins.some((p) => p.name === a.plugin)) {
+  console.error(`Plugin "${a.plugin}" already exists in ${marketFile}. Stop and ask the user: overwrite or rename?`);
   process.exit(2);
 }
 
 // Plugin files.
-const pluginDir = join(a.dest, a.name);
+const pluginDir = join(a.dest, a.plugin);
 mkdirSync(join(pluginDir, '.claude-plugin'), { recursive: true });
-const skillDir = join(pluginDir, 'skills', a.name);
+const skillDir = join(pluginDir, 'skills', a.skill);
 mkdirSync(skillDir, { recursive: true });
 
 writeFileSync(
   join(pluginDir, '.claude-plugin', 'plugin.json'),
-  JSON.stringify({ name: a.name, description: a.description, version: '1.0.0' }, null, 2) + '\n',
+  JSON.stringify({ name: a.plugin, description: a.description, version: '1.0.0' }, null, 2) + '\n',
 );
-writeFileSync(join(skillDir, 'SKILL.md'), readFileSync(a.skill, 'utf8'));
+writeFileSync(join(skillDir, 'SKILL.md'), readFileSync(a.body, 'utf8'));
 
 // Register in the marketplace.
-market.plugins.push({ name: a.name, source: `./${a.name}`, description: a.description });
+market.plugins.push({ name: a.plugin, source: `./${a.plugin}`, description: a.description });
 mkdirSync(dirname(marketFile), { recursive: true });
 writeFileSync(marketFile, JSON.stringify(market, null, 2) + '\n');
 
