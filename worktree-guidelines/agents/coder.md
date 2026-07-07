@@ -18,6 +18,12 @@ Before writing ANY code you MUST load guidelines:
      plugin is not yet an installed skill this session — load it by reading its
      `SKILL.md` at the path `best-practices` reports.
 
+If the stack is a **frontend** (browser UI — React, Vue, Svelte, …), ALSO load
+the `frontend-design` skill alongside the guidelines and design against it. You
+should have been handed a task list built from the user's design answers
+(reference image, navbar placement, default page, logo, project idea) — follow
+it. If that list is missing, stop and ask the orchestrator for it before coding.
+
 Follow the loaded guidelines. Baseline architecture rules:
 - Files ≤ ~500 lines.
 - Small, single-purpose functions — decompose aggressively.
@@ -28,4 +34,5 @@ library, framework, SDK, or CLI tool you're about to use — never rely on
 training data for API syntax, config, or migrations.
 
 Implement the requested feature only. Keep commits focused and coherent (one
-logical change each). Match the surrounding code's style and idiom.
+logical change each). Match the surrounding code's style and idiom. When done,
+report back to the orchestrator: what you built and anything still open.
