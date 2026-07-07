@@ -64,22 +64,33 @@ Pin the ecosystem-standard lint/format/type tools and the exact commands:
 ## 5. Point at live docs
 Instruct the generated skill to use the **Context7 MCP** for current, version-accurate docs of the libraries/frameworks in the stack — never rely on training data for API syntax, config, or migrations.
 
-## 6. Package as a plugin
-Write the guidelines as a plugin, not a bare SKILL.md:
-```
-<name>-guidelines/
-  .claude-plugin/plugin.json        # { name, description, version: "1.0.0" }
-  skills/<name>-guidelines/SKILL.md  # frontmatter: description tells Claude to invoke it before writing this stack
-```
-Keep SKILL.md lean and imperative — terse rules, no prose padding.
+## 6. Write the SKILL.md body to a temp file
+Write the terse, imperative guideline rules (lean — no prose padding) to a temp
+file, e.g. `<scratchpad>/<name>-guidelines.SKILL.md`. Include the full frontmatter
+(`name: <name>-guidelines`, and a `description` that tells Claude to invoke it
+before writing this stack). This temp file is the INPUT to the scaffold script —
+do NOT write it into any skills directory yourself.
 
-## 7. Place the plugin
-After the build, ask the user: **is there a remote marketplace you work with that you want this saved in?** (so they can push it and use the guideline anywhere).
-- **Yes** → ask them to point to that marketplace's local path, and save the plugin there.
-  - If `<path>/.claude-plugin/marketplace.json` exists → create the plugin dir under `<path>` and **append** to its `plugins[]`.
-  - If it does NOT exist → create the marketplace there first (`.claude-plugin/marketplace.json` with `name`, `owner`, empty `plugins[]` — ask for name/owner), then add the plugin.
-- **No** → save it locally: create the plugin dir at this marketplace's root and append an entry to `./.claude-plugin/marketplace.json` `plugins[]`.
-- Every entry is `{ name, source: ./<name>-guidelines, description }`. **Append, never overwrite** the marketplace file. If a plugin with that name already exists in `plugins[]`, stop and ask whether to overwrite or rename — do not duplicate the entry.
+## 7. Ask placement, then run the scaffold script — the ONLY approved packaging
+First ask the user: **is there a remote marketplace you work with that you want
+this saved in?** (so they can push it and use the guideline anywhere).
+- **Yes** → they give its local path → that path is `--dest`.
+- **No** → save locally: `--dest` is this marketplace's root.
+
+Then package + register in one deterministic step by RUNNING the script (never
+hand-write plugin files, never drop a bare SKILL.md):
+```
+node "${CLAUDE_PLUGIN_ROOT}/skills/best-practices/scaffold.mjs" \
+  --name <name>-guidelines --dest <marketplace-root> \
+  --description "<invoke-before-writing description>" --skill <temp-SKILL.md>
+```
+The script creates `<dest>/<name>-guidelines/` with `plugin.json` + the SKILL.md
+and appends the entry to `<dest>/.claude-plugin/marketplace.json`. If that
+marketplace file doesn't exist yet, add `--market-name <name> --owner <owner>`
+(ask the user) and the script creates it. The script refuses to overwrite an
+existing plugin of the same name — if it exits with that error, ask the user
+whether to overwrite or rename. A run that ends without this script having
+succeeded is a FAILED run.
 
 ## 8. Hand off
 - A freshly-written plugin is NOT installed as a loadable skill this session. Report the exact SKILL.md path and **read it back by path**; the coder loads the guidelines by reading that file until the plugin is installed in a later session.
