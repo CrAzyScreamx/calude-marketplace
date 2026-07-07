@@ -7,7 +7,7 @@
         {
             "name": "worktree-guidelines",
             "source": "./worktree-guidelines",
-            "description": "Enforces a review-gated worktree workflow: entry steers you to load/build a per-language guidelines skill and code via the coder agent; a reviewer runs code-review and writes a pass marker; exit and merge-into-main are blocked until the reviewed HEAD is merged and the tree is clean."
+            "description": "Guidelines-first worktree workflow: entry steers you to load a per-language guidelines skill (or ask to build one via best-practices) and code via the coder agent, which uses Context7 for up-to-date library docs."
         },
         {
             "name": "session-manager",

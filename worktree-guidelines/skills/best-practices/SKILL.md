@@ -6,7 +6,14 @@ description: "Use when no `<lang>-guidelines` skill exists for the language/stac
 # Important
 When no `<lang>-guidelines` skill exists for the stack in play, this skill BUILDS one — packaged as a standalone **plugin** — before any code is written. Do not start coding until the plugin exists and its SKILL.md has been loaded.
 
-The generated skill MUST keep the `-guidelines` suffix (e.g. `react-guidelines`, `fastapi-guidelines`, `containerization-guidelines`). The coder/reviewer/hooks resolve it by that suffix — do not rename the contract.
+The generated skill MUST keep the `-guidelines` suffix (e.g. `react-guidelines`, `fastapi-guidelines`, `containerization-guidelines`). The coder and hooks resolve it by that suffix — do not rename the contract.
+
+# Output contract — non-negotiable
+You are NOT done when the SKILL.md is written. Both of these MUST happen, in order:
+1. **Package as a plugin (step 6).** NEVER write a bare `SKILL.md` into a skills directory — especially not `~/.claude/skills/`. The output is a plugin folder (`<name>-guidelines/.claude-plugin/plugin.json` + `skills/<name>-guidelines/SKILL.md`). A lone SKILL.md is a failed run.
+2. **Ask the placement question (step 7)** and register the plugin in a marketplace's `plugins[]`. You may NOT end the run without asking whether to save it in a remote marketplace or locally, and then writing the marketplace entry.
+
+If you catch yourself about to hand off after only writing a SKILL.md, stop — you skipped steps 6–7.
 
 # Workflow
 
@@ -67,12 +74,12 @@ Write the guidelines as a plugin, not a bare SKILL.md:
 Keep SKILL.md lean and imperative — terse rules, no prose padding.
 
 ## 7. Place the plugin
-Ask the user: save **locally** or in **another marketplace**?
-- **Local** → create the plugin dir at this marketplace's root and append an entry to `./.claude-plugin/marketplace.json` `plugins[]` (`name`, `source: ./<name>-guidelines`, `description`).
-- **External** → user gives a path.
+After the build, ask the user: **is there a remote marketplace you work with that you want this saved in?** (so they can push it and use the guideline anywhere).
+- **Yes** → ask them to point to that marketplace's local path, and save the plugin there.
   - If `<path>/.claude-plugin/marketplace.json` exists → create the plugin dir under `<path>` and **append** to its `plugins[]`.
   - If it does NOT exist → create the marketplace there first (`.claude-plugin/marketplace.json` with `name`, `owner`, empty `plugins[]` — ask for name/owner), then add the plugin.
-- **Append, never overwrite** the marketplace file. If a plugin with that name already exists in `plugins[]`, stop and ask whether to overwrite or rename — do not duplicate the entry.
+- **No** → save it locally: create the plugin dir at this marketplace's root and append an entry to `./.claude-plugin/marketplace.json` `plugins[]`.
+- Every entry is `{ name, source: ./<name>-guidelines, description }`. **Append, never overwrite** the marketplace file. If a plugin with that name already exists in `plugins[]`, stop and ask whether to overwrite or rename — do not duplicate the entry.
 
 ## 8. Hand off
 - A freshly-written plugin is NOT installed as a loadable skill this session. Report the exact SKILL.md path and **read it back by path**; the coder loads the guidelines by reading that file until the plugin is installed in a later session.

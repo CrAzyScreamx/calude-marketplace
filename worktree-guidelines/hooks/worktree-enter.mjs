@@ -8,7 +8,7 @@ addContext([
   '1. Build a todo list capturing the feature work end to end.',
   '2. Route all implementation through the `coder` agent, not inline edits.',
   '3. Load the project\'s `<lang>-guidelines` skill for the stack in use; if none',
-  '   exists, invoke the `best-practices` builder skill to create one first.',
-  '4. Remember: exiting and merging this worktree are review-gated — get a passing',
-  '   review (which writes the .worktree-review-ok marker) before you try to exit or merge.',
+  '   exists, ask the user whether to build one via the `best-practices` skill',
+  '   before coding.',
+  '4. Use the Context7 MCP for current, version-accurate library/framework docs.',
 ].join('\n'));
