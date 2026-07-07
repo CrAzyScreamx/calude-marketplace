@@ -38,6 +38,11 @@
       "name": "environmental-preparations",
       "source": "./environmental-preparations",
       "description": "A running log of the user's environment preferences and configuration changes (CLAUDE.md rules, settings, conventions). Read at session start to set up the environment the way the user likes."
+    },
+    {
+      "name": "coding-guidelines",
+      "source": "./coding-guidelines",
+      "description": "Invoke BEFORE writing any React/TypeScript frontend code — encodes React + TS + Vite + pnpm conventions, architecture rules, and tooling commands."
     }
   ]
 }

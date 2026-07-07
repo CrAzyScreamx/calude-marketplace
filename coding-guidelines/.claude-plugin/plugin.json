@@ -1,0 +1,5 @@
+{
+  "name": "coding-guidelines",
+  "description": "Invoke BEFORE writing any React/TypeScript frontend code — encodes React + TS + Vite + pnpm conventions, architecture rules, and tooling commands.",
+  "version": "1.0.0"
+}
