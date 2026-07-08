@@ -22,30 +22,20 @@ Decide which category is being built and confirm with the user:
 - **frontend** — browser UI (React, Vue, Svelte, …). Name it after the framework: `<framework>-guidelines`.
 - **backend** — server/API/CLI/library (Python, Go, Node API, …). Name it `<framework-or-lang>-guidelines`.
 - **containerization** — Docker packaging. Name it `containerization-guidelines`.
+- **ci-cd** — pipeline/automation config (GitHub Actions, GitLab CI, …). Name it `cicd-guidelines`.
 
-A mixed feature (frontend + backend + Docker) = build one plugin per category.
+A mixed feature (frontend + backend + Docker + CI) = build one plugin per category.
 
 ## 2. Collect the stack — branch by category
-Always collect: language, framework, runtime, test tool, lint/format/type tooling. If the user is unsure, propose the ecosystem standard (see Tooling) and confirm. Then ask the category-specific questions:
+Always collect: language, framework, runtime, test tool, lint/format/type tooling. If the user is unsure, propose the ecosystem standard and confirm.
 
-### frontend
-- **Style guide / components**: where components live, naming, and structure inside the per-project layout (e.g. `components/`, atomic vs feature folders).
-- **Design Sync**: offer to keep the component library in sync with a Claude Design project via the `DesignSync` tool / `/design-sync` skill. If yes, record it as a step in the generated skill.
-- **External libraries** to bake into best practices (UI kit, state, data-fetching, forms, routing).
-- **Environment**: bundler / dev server (Vite, etc.), package manager, TS config.
-- **Design skill**: the generated skill MUST instruct the coder to also load the
-  `frontend-design` skill and design against it, and to gather the design brief
-  before coding (reference image, navbar placement, default page, logo, project
-  idea, plus brand colors / theme / target device as relevant).
+Then **read the reference file for the category you classified in step 1** and ask its questions — do not inline them here:
+- frontend → `references/frontend.md`
+- backend → `references/backend.md`
+- containerization → `references/containerization.md`
+- ci-cd → `references/ci-cd.md`
 
-### backend
-- **External libraries** to use (framework, ORM/driver, validation, auth, HTTP client).
-- **Exact tech stack** for the language (e.g. FastAPI + SQLAlchemy + Pydantic).
-- **Environment**: how the project is set up per language — e.g. Python → `pyproject.toml`, `requirements.txt`, `venv`, `uvicorn`; Node → `package.json`, scripts; Go → modules.
-
-### containerization
-- **Dockerfile**: base image, multi-stage build, non-root user, layer-cache ordering, healthcheck, entrypoint.
-- **docker-compose.yml**: services, networks, volumes, env files, `depends_on`/healthchecks, dev vs prod overrides.
+Each reference file carries the category's naming rule, questions, and tooling.
 
 ## 3. Encode architecture rules
 Adapt to the stack's idiom:
@@ -56,14 +46,14 @@ Adapt to the stack's idiom:
 - Clear naming per idiom (snake_case, camelCase, PascalCase).
 - Fold in the category answers from step 2 as concrete rules.
 
+**Adding an extension to a guideline** (any new rule/practice, whether building it now or extending an existing one): before writing it, ask the user which mode it takes —
+- **Always-follow** → bake the rule directly into the SKILL.md body so the coder applies it on every run.
+- **Conditional reference** → the rule only applies in a specific situation. Record the trigger condition + the rule, and phrase it as "when `<situation>`, do `<rule>`" so it's referenced only when that situation occurs.
+
+Default to asking per extension; don't assume. If the user says a class of extensions is always one mode, follow that without re-asking.
+
 ## 4. Encode the tooling
-Pin the ecosystem-standard lint/format/type tools and the exact commands:
-- Python → `ruff` (lint + format) + `pyright` (types)
-- JS/TS → `eslint` + `prettier` + `tsc`
-- Go → `gofmt` + `golangci-lint`
-- Rust → `rustfmt` + `clippy`
-- Other → the ecosystem-standard equivalents.
-- **containerization** has no type step — pin the lint/validate equivalents instead (`hadolint`, `docker build`, `docker compose config`).
+Pin the exact lint/format/type commands the category's reference file names (step 2), plus any ecosystem standard for the specific language in play. Encode the commands verbatim so the coder runs them.
 
 ## 5. Point at live docs
 Instruct the generated skill to use the **Context7 MCP** for current, version-accurate docs of the libraries/frameworks in the stack — never rely on training data for API syntax, config, or migrations.
