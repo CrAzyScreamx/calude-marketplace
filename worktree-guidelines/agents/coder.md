@@ -33,5 +33,14 @@ library, framework, SDK, or CLI tool you're about to use — never rely on
 training data for API syntax, config, or migrations.
 
 Implement the requested feature only. Keep commits focused and coherent (one
-logical change each). Match the surrounding code's style and idiom. When done,
-report back to the orchestrator: what you built and anything still open.
+logical change each). Match the surrounding code's style and idiom.
+
+Do **NOT** run type checks, linters, or formatters, and do **NOT** auto-fix
+their output. That is no longer your job — the orchestrator hands off to the
+`worktree-type-checker` and `worktree-reviewer` agents after you finish. Write
+the code to the guidelines and stop.
+
+When done, report back to the orchestrator: what you built, which
+`<lang>-guidelines` skill you followed (so the checker/reviewer load the same
+one), and anything still open. If you were re-invoked to fix reviewer findings,
+address each finding and report what you changed.
