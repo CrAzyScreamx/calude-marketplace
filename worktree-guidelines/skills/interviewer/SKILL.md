@@ -9,30 +9,18 @@ feature. Skip anything already answered in the conversation — never re-ask.
 Fold every answer into the task list handed to each coder, scoped to its
 specialty.
 
-## Frontend (browser UI)
-1. **Component theme** — exact styling for navbar, buttons, cards, inputs
-   (radius, spacing, shadows, borders, states).
-2. **Typography** — the font(s) for headings and body.
-3. **Color mode** — light, dark, or both.
-4. **Navbar placement** — top / side / none.
-5. Up to **3 more** as relevant: brand colors, reference image, default page,
-   logo, target device, key pages.
+## Categories
+Classify the feature, then **read the reference file for each category that
+applies** and ask its questions — do not inline them here. A mixed feature
+touches more than one; read each.
 
-## Backend
-### API
-- Known endpoints likely needed (users, auth, …).
-- Router structure — how routers are grouped and mounted.
-- Known dependencies — framework, ORM/driver, validation, auth, HTTP client.
-### Caching (only if needed)
-- Whether caching is needed and how it works — layer, store, TTL, invalidation.
-### Database (only if needed)
-- Schema/structure — entities, relationships, migration tool.
-### Up to 3 more as relevant
-- Auth/authorization model — JWT, sessions, roles/scopes.
-- External integrations — third-party APIs, queues, webhooks.
-- Environment & config — env vars, secrets, deploy target.
+- **frontend** — browser UI (React, Vue, Svelte, …) → `references/frontend.md`
+- **backend** — server/API/CLI/library → `references/backend.md`
+- **containerization** — Docker packaging → `references/containerization.md`
+- **ci-cd** — pipeline/automation config → `references/ci-cd.md`
 
 ## Handoff
 Give each coder only the answers for its specialty (frontend coder → frontend
-answers; database coder → DB answers), then split the work across specialized
-coders running in parallel.
+answers; database coder → DB answers; containerization coder → Docker answers;
+ci-cd coder → pipeline answers), then split the work across specialized coders
+running in parallel.
