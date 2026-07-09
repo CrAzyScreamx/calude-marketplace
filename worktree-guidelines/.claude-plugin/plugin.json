@@ -1,5 +1,5 @@
 {
     "name": "worktree-guidelines",
     "description": "Guidelines-first worktree workflow. When working in a git worktree it steers you to load a per-language guidelines skill — or, if none exists, ask the user whether to build one via the `best-practices` skill — and route all implementation through the coder agent, which uses Context7 for up-to-date library docs. Use for any isolated feature work in a worktree.",
-    "version": "2.1.0"
+    "version": "2.2.0"
 }
