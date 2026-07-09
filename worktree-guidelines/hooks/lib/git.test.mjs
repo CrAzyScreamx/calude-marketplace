@@ -3,7 +3,21 @@ import assert from 'node:assert';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { headSha, isAncestor, markerSha, writeMarker } from './git.mjs';
+import { headSha, isAncestor, markerSha, writeMarker, isWorktreeAdd } from './git.mjs';
+
+for (const cmd of [
+  'git worktree add /tmp/x -b feat',
+  'cd /repo && git worktree add ../wt',
+  '/usr/bin/git worktree add ../wt',
+  'git  worktree   add ../wt',
+]) assert.equal(isWorktreeAdd(cmd), true, `should block: ${cmd}`);
+
+for (const cmd of [
+  'git worktree list',
+  'git worktree remove /tmp/x',
+  'git commit -m "add worktree add docs"',
+  'echo git worktree add',
+]) assert.equal(isWorktreeAdd(cmd), false, `should allow: ${cmd}`);
 
 const sha = headSha();
 assert.match(sha, /^[0-9a-f]{40}$/, 'headSha should be a 40-char hex SHA');

@@ -86,6 +86,15 @@ export function allow() {
   process.exit(0);
 }
 
+// True if a shell command creates a worktree. Splits on shell separators so a
+// chained `foo && git worktree add …` is still caught; `worktree list/remove`
+// and paths that merely contain the words are not.
+export function isWorktreeAdd(command) {
+  return command
+    .split(/\|\||&&|[|;&\n]/)
+    .some((seg) => /^\s*(?:\S*\/)?git\b[^'"]*?\bworktree\s+add\b/.test(seg));
+}
+
 // Inject guidance into the conversation without deciding the tool call.
 export function addContext(text, event = 'PreToolUse') {
   process.stdout.write(JSON.stringify({
