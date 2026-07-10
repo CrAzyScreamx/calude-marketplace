@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "command -v node >/dev/null 2>&1 && node \"${CLAUDE_PLUGIN_ROOT}/hooks/worktree-enter.mjs\" || exit 0",
-            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\worktree-enter.mjs\" }",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/worktree-enter.mjs"],
             "timeout": 10,
             "statusMessage": "Steering worktree entry..."
           }
@@ -18,8 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "command -v node >/dev/null 2>&1 && node \"${CLAUDE_PLUGIN_ROOT}/hooks/worktree-guard.mjs\" || exit 0",
-            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\worktree-guard.mjs\" }",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/worktree-guard.mjs"],
             "timeout": 10,
             "statusMessage": "Checking for manual worktree creation..."
           }

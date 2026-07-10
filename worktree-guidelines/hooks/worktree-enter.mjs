@@ -1,15 +1,18 @@
-// M2.2 entry steering: inject guidance when Claude enters a worktree.
+// Entry steering: inject guidance when Claude enters a worktree.
 import { readInput, addContext } from './lib/git.mjs';
 
 await readInput();
 
 addContext([
   'You have entered a git worktree for a feature. Do NOT run the feature work',
-  'yourself. Invoke the `worktree-manager` agent and hand it the feature scope.',
-  'It owns the whole pipeline: interview → task split → parallel coders →',
-  'type-check → review → loop until PASS.',
+  'yourself. First run the `feature-interviewer` skill to gather project details',
+  'from the user, then invoke the `worktree-manager` agent, handing it the feature',
+  'scope and the interview answers. The manager owns delegation: task split →',
+  'parallel `worktree-coder`s → `worktree-type-checker` → `worktree-reviewer`,',
+  'looping until the review passes.',
   '',
-  'Your only jobs while it runs: relay questions it raises to the user (e.g.',
-  'whether to build a missing `<lang>-guidelines` skill via `best-practices`,',
-  'and the plugin reload afterwards), and report its result when it returns.',
+  'While it runs, you — not the manager — handle everything user-facing: if it',
+  'reports `No guideline for <stack>.`, ask the user whether to build one via the',
+  '`guideline-builder` skill, then re-invoke the manager. Report its result when it',
+  'returns.',
 ].join('\n'));

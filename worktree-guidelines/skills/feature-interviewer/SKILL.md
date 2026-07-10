@@ -1,9 +1,9 @@
 ---
-name: interviewer
-description: "Invoke BEFORE any coder, once a worktree feature is scoped. Gathers the project details coders need — frontend theme/typography/layout, backend API/caching/DB shape — and hands the answers to each specialized coder. Use whenever entering a worktree feature or before splitting work across coders."
+name: feature-interviewer
+description: "Gathers the project details each specialized coder needs before it writes code — frontend theme/typography/layout, backend API/caching/DB shape, containerization build/runtime shape, CI/CD pipeline shape — then hands each coder only its scoped answers. Use before invoking any coder, once a worktree feature is scoped, or whenever splitting work across parallel coders."
 ---
 
-# Interviewer
+# Feature interviewer
 Run this before invoking any `coder`. Ask ONLY the sections that apply to the
 feature. Skip anything already answered in the conversation — never re-ask.
 Fold every answer into the task list handed to each coder, scoped to its
