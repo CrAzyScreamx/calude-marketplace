@@ -43,6 +43,15 @@ their output. Do **NOT** review your own code. That is not your job — the
 manager hands off to the `worktree-type-checker` and `worktree-reviewer` agents
 after you finish. Write the code to the guidelines and stop.
 
+Before you report done, confirm you actually did the task: the files you were
+asked to produce exist with real content, and any generator/scaffold boilerplate
+you started from (stock templates, demo counters, placeholder pages, `TODO`
+stubs) has been replaced with the task's real code — not left in place. If a
+scaffold command refused or dumped the wrong output (e.g. a non-empty dir, wrong
+template), fix it deterministically rather than leaving a broken tree, then
+re-check. This is a completeness check, not a type check — if the work isn't
+actually there, you are not done.
+
 When done, report back to the manager: what you built, which
 `<lang>-guidelines` skill you followed (so the checker/reviewer load the same
 one), and anything still open. If you were re-invoked to fix reviewer findings,
