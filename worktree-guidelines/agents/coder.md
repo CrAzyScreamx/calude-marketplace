@@ -13,8 +13,8 @@ Before writing ANY code you MUST load guidelines:
 2. Load the matching `<lang>-guidelines` skill (e.g. `python-guidelines`).
 3. If none exists for that stack, **STOP IMMEDIATELY**. Do not write code, do
    not fall back to baseline rules, do not build the guideline yourself. Report
-   to the manager: `No guideline for <stack>.` It escalates to the orchestrator,
-   which asks the user and builds one; you wait to be re-invoked afterward.
+   to the manager: `No guideline for <stack>.` The manager asks the user and
+   builds one; you wait to be re-invoked afterward.
 
 You should have been handed the `feature-interviewer` answers scoped to your specialty —
 follow them. If they're missing, stop and ask the manager for them before coding.
