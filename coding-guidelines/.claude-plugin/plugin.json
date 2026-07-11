@@ -1,5 +1,5 @@
 {
   "name": "coding-guidelines",
   "description": "Coding guidelines bundle — invoke the matching -guidelines skill BEFORE writing code for that stack (frontend, backend, containerization). Encodes per-stack conventions, architecture rules, and tooling commands.",
-  "version": "1.1.0"
+  "version": "1.2.0"
 }
