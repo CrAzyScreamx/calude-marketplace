@@ -42,7 +42,7 @@
     {
       "name": "coding-guidelines",
       "source": "./coding-guidelines",
-      "description": "Coding guidelines bundle — invoke the matching -guidelines skill BEFORE writing code for that stack (frontend, backend, containerization). Encodes per-stack conventions, architecture rules, and tooling commands."
+      "description": "Coding guidelines bundle — invoke the matching -guidelines skill BEFORE writing code for that stack (frontend, backend, containerization, ci-cd). Encodes per-stack conventions, architecture rules, and tooling commands."
     }
   ]
 }
