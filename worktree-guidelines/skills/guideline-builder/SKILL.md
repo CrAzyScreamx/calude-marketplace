@@ -79,7 +79,9 @@ node "${CLAUDE_PLUGIN_ROOT}/skills/guideline-builder/scaffold.mjs" \
   --dest <marketplace-root> \
   --description "<invoke-before-writing description>" --body <temp-SKILL.md>
 ```
-The script creates `<dest>/<plugin-name>/` with `plugin.json` + `skills/<stack>-guidelines/SKILL.md`, and appends the entry to `<dest>/.claude-plugin/marketplace.json`. If that marketplace file doesn't exist yet, add `--market-name <name> --owner <owner>` (ask the user) and the script creates it. It refuses to overwrite an existing plugin of the same name (checking both the marketplace and the plugin dir on disk) and exits 2 — if that happens, ask the user whether to **overwrite** (re-run the same command with `--force`) or pick a new `--plugin` name. A run that ends without this script having succeeded is a FAILED run.
+Bundle any reference files the SKILL.md points at with repeated `--ref <name>=<path>` flags — each copies `<path>` into `skills/<stack>-guidelines/references/<name>`, and `<name>` may include subdirs (e.g. `--ref db/postgres.md=<temp-postgres.md>`). Write each reference body to its own temp file first, same as the SKILL.md body.
+
+The script creates `<dest>/<plugin-name>/` with `plugin.json` + `skills/<stack>-guidelines/SKILL.md` (plus any `references/` files), and appends the entry to `<dest>/.claude-plugin/marketplace.json`. If that marketplace file doesn't exist yet, add `--market-name <name> --owner <owner>` (ask the user) and the script creates it. It refuses to overwrite an existing plugin of the same name (checking both the marketplace and the plugin dir on disk) and exits 2 — if that happens, ask the user whether to **overwrite** (re-run the same command with `--force`) or pick a new `--plugin` name. A run that ends without this script having succeeded is a FAILED run.
 
 ### 8. Hand off
 - A freshly-written plugin is NOT installed as a loadable skill this session. Report the exact SKILL.md path and **read it back by path**; the coder loads the guidelines by reading that file until the plugin is installed in a later session.

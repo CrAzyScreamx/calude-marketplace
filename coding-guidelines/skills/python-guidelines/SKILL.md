@@ -1,6 +1,6 @@
 ---
 name: python-guidelines
-description: Invoke BEFORE writing any Python code (CLI tools, libraries, APIs, modules, tests). Encodes the project's Python + uv + ruff + pyright + pytest architecture, plus conditional references for DB, API, and caching work.
+description: Invoke BEFORE writing any Python code (CLI tools, libraries, APIs, modules, tests). Encodes the project's Python + uv + ruff + pyright + pytest architecture, plus conditional references for DB, API, caching, and CustomTkinter GUI work.
 ---
 
 # Python Guidelines
@@ -11,6 +11,7 @@ Follow these before writing any Python code. Load the matching reference below *
 - **Using a database?** → read `references/db.md` (SQLAlchemy 2.0 + Alembic).
 - **Building/exposing an API?** → read `references/api.md` (FastAPI).
 - **Adding caching?** → read `references/caching.md` (Redis / redis-py).
+- **Building a CustomTkinter desktop GUI?** → read `references/customtkinter.md` (CTk structure, threading, CTkImage, theming).
 
 Don't load a reference the task doesn't touch. A plain CLI with no DB/API/cache uses this file alone.
 

@@ -16,10 +16,14 @@
 //   Optional:
 //     --market-name <name> --owner <owner>  (only when <dest> has no marketplace.json yet)
 //     --force                               (overwrite an existing plugin of the same name)
+//     --ref <name>=<path>                   (repeatable) copy <path> into
+//                                           skills/<skill>/references/<name>. <name>
+//                                           may include subdirs, e.g. db/postgres.md.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 
 const BOOLEANS = new Set(['force']);
+const REPEATED = new Set(['ref']); // collected into an array
 
 function fail(msg) {
   console.error(msg);
@@ -38,15 +42,17 @@ function parseArgs(argv) {
       a[key] = eq === -1 ? true : tok.slice(eq + 1) !== 'false';
       continue;
     }
+    let val;
     if (eq !== -1) {
-      a[key] = tok.slice(eq + 1);
-      continue;
+      val = tok.slice(eq + 1);
+    } else {
+      val = argv[i + 1];
+      // ponytail: a value that itself starts with `--` must use the --flag=value form.
+      if (val === undefined || val.startsWith('--')) fail(`Flag "${tok}" needs a value.`);
+      i++;
     }
-    const val = argv[i + 1];
-    // ponytail: a value that itself starts with `--` must use the --flag=value form.
-    if (val === undefined || val.startsWith('--')) fail(`Flag "${tok}" needs a value.`);
-    a[key] = val;
-    i++;
+    if (REPEATED.has(key)) (a[key] ??= []).push(val);
+    else a[key] = val;
   }
   return a;
 }
@@ -101,6 +107,22 @@ writeFileSync(
 );
 writeFileSync(join(skillDir, 'SKILL.md'), readFileSync(a.body, 'utf8'));
 
+// Reference files → skills/<skill>/references/<name>.
+const refPaths = [];
+for (const spec of a.ref ?? []) {
+  const eq = spec.indexOf('=');
+  if (eq === -1) fail(`--ref must be <name>=<path> (got "${spec}").`);
+  const name = spec.slice(0, eq);
+  const src = spec.slice(eq + 1);
+  if (!name || !src) fail(`--ref must be <name>=<path> (got "${spec}").`);
+  if (name.startsWith('/') || name.includes('..')) fail(`--ref name must be a relative path inside references/ (got "${name}").`);
+  if (!existsSync(src)) fail(`--ref source not found: ${src}`);
+  const out = join(skillDir, 'references', name);
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, readFileSync(src, 'utf8'));
+  refPaths.push(out);
+}
+
 // Register in the marketplace — replace any existing entry so --force updates
 // the record instead of duplicating it.
 market.plugins = market.plugins.filter((p) => p.name !== a.plugin);
@@ -110,4 +132,5 @@ writeFileSync(marketFile, JSON.stringify(market, null, 2) + '\n');
 
 console.log(`Plugin created:   ${pluginDir}`);
 console.log(`SKILL.md:         ${join(skillDir, 'SKILL.md')}`);
+for (const r of refPaths) console.log(`Reference:        ${r}`);
 console.log(`Registered in:    ${marketFile}`);
